@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Form } from "semantic-ui-react";
+import { Form, Header } from "semantic-ui-react";
 import { generateInputProps } from "../../app/tools";
 import { createEmployee } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
@@ -19,12 +19,15 @@ function EmployeeForm() {
   );
 
   return (
-    <Formik
-      initialValues={{ first_name: '', last_name: '', email: '', permanent: false, dob: '', status: 0 }}
-      onSubmit={submitForm}
-    >
-      {EmployeeInnerForm}
-    </Formik>
+    <>
+      <Header as="h1">Employees Management</Header>
+      <Formik
+        initialValues={{ first_name: '', last_name: '', email: '', permanent: false, dob: '', status: 0 }}
+        onSubmit={submitForm}
+      >
+        {EmployeeInnerForm}
+      </Formik>
+    </>
   );
 }
 

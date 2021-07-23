@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Form, Message } from "semantic-ui-react";
+import { Form, Header, Message } from "semantic-ui-react";
 import { generateInputProps } from "../../app/tools";
 import { clearErros, createUserAsync, selectErrors, selectToken } from "../../reducers/tokenSlice";
 import formValidation from "./formValidation";
@@ -30,13 +30,16 @@ function SignUpForm() {
   }
 
   return (
-    <Formik
-      initialValues={{ username: '', password: '', retypePassword: '' }}
-      onSubmit={submitForm}
-      validationSchema={formValidation}
-    >
-      {SignUpInnerForm}
-    </Formik>
+    <>
+      <Header as="h1">Sign Up</Header>
+      <Formik
+        initialValues={{ username: '', password: '', retypePassword: '' }}
+        onSubmit={submitForm}
+        validationSchema={formValidation}
+      >
+        {SignUpInnerForm}
+      </Formik>
+    </>
   );
 }
 

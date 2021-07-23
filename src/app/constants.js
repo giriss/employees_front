@@ -1,1 +1,1 @@
-export const ENDPOINT = 'http://localhost:4000/api';
+export const ENDPOINT = 'https://employees-api-elixir.herokuapp.com/api';
