@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-      <LoadingBar ref={loadingRef} />
+      <LoadingBar color="#2185d0" ref={loadingRef} />
       <Router>
         <Container text>
           <Switch>

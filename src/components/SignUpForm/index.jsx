@@ -3,15 +3,14 @@ import { useEffect } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
 import { Form, Header, Message } from "semantic-ui-react";
 import { generateInputProps } from "../../app/tools";
-import { clearErros, createUserAsync, selectErrors, selectToken } from "../../reducers/tokenSlice";
+import { clearErros, createUserAsync, selectErrors } from "../../reducers/tokenSlice";
 import formValidation from "./formValidation";
+import Authentication from "../Authentication";
 
 function SignUpForm() {
   const dispatch = useDispatch();
-  const token = useSelector(selectToken);
 
   const submitForm = useCallback(
     ({ username, password }) => {
@@ -25,12 +24,8 @@ function SignUpForm() {
     dispatch(clearErros());
   }, [dispatch]);
 
-  if (token) {
-    return <Redirect to="/" />;
-  }
-
   return (
-    <>
+    <Authentication loggedOut>
       <Header as="h1">Sign Up</Header>
       <Formik
         initialValues={{ username: '', password: '', retypePassword: '' }}
@@ -39,7 +34,7 @@ function SignUpForm() {
       >
         {SignUpInnerForm}
       </Formik>
-    </>
+    </Authentication>
   );
 }
 
@@ -91,7 +86,7 @@ function SignUpInnerForm({
         />
       )}
       <Form.Button
-        color="instagram"
+        primary
         disabled={!isValid || !dirty}
       >
         Sign Up

@@ -5,19 +5,14 @@ import loadingReducer from '../reducers/loadingSlice';
 
 const token = JSON.parse(window.sessionStorage.getItem('token'));
 
-const store = function() {
-  console.log('again?');
-  return configureStore({
-    reducer: {
-      token: tokenReducer,
-      employees: employeesReducer,
-      loading: loadingReducer,
-    },
-    ...(token ? { preloadedState: { token } } : {}),
-  });
-} ();
-
-console.log(store.getState());
+const store = configureStore({
+  reducer: {
+    token: tokenReducer,
+    employees: employeesReducer,
+    loading: loadingReducer,
+  },
+  ...(token ? { preloadedState: { token } } : {}),
+});
 
 store.subscribe(() => {
   window.sessionStorage.setItem('token', JSON.stringify(store.getState().token));

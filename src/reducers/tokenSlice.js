@@ -3,7 +3,8 @@ import Axios from '../app/Axios';
 import { ENDPOINT } from '../app/constants';
 
 const initialState = {
-  value: null,
+  value: '',
+  expiry: 0,
   errors: [],
 };
 
@@ -18,7 +19,10 @@ const makeUserRequest = async (
         user: { username, password },
       },
     );
-    return response.data.data.access_token;
+    return {
+      accessToken: response.data.data.access_token,
+      expiry: response.data.data.expiry,
+    };
   } catch (error) {
     const errors = error.response.data.errors;
     return rejectWithValue(
@@ -52,8 +56,9 @@ export const tokenSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       createUserAsync.fulfilled,
-      (state, { payload }) => {
-        state.value = payload;
+      (state, { payload: { accessToken, expiry } }) => {
+        state.value = accessToken;
+        state.expiry = expiry;
       },
     ).addCase(
       createUserAsync.rejected,
@@ -66,7 +71,10 @@ export const tokenSlice = createSlice({
 
 export const { clearErros } = tokenSlice.actions;
 
-export const selectToken = (state) => state.token.value;
+export const selectToken = ({ token: { value } }) => value === '' ? false : value;
+export const selectIsTokenValid = ({ token: { value, expiry } }) => (
+  value !== '' && expiry >= Date.now() / 1_000
+);
 export const selectErrors = (state) => state.token.errors;
 
 export default tokenSlice.reducer;

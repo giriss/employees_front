@@ -1,16 +1,12 @@
-import { useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
-import { selectToken } from "../../reducers/tokenSlice";
 import LoginOrRegister from "./LoginOrRegister";
+import Authentication from "../Authentication";
 
 function Homepage() {
-  const token = useSelector(selectToken);
-
-  if (token) {
-    return <Redirect to="/employees" />;
-  }
-
-  return <LoginOrRegister />;
+  return (
+    <Authentication loggedOut>
+      <LoginOrRegister />
+    </Authentication>
+  );
 }
 
 export default Homepage;
