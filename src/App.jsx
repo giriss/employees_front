@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Homepage from './components/Homepage';
 import SignUpForm from './components/SignUpForm';
 import SignInForm from './components/SignInForm';
+import EmployeesDashboard from "./components/EmployeesDashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
               <Switch>
                 <Route exact path="/sign-in" component={SignInForm} />
                 <Route exact path="/sign-up" component={SignUpForm} />
+                <Route path="/employees" component={EmployeesDashboard} />
                 <Route>404 - Not found</Route>
               </Switch>
             </Segment>

@@ -9,7 +9,7 @@ function SignIn() {
         Already a user?
       </Header>
       <Button
-        color="violet"
+        color="instagram"
         as={Link}
         to="/sign-in"
       >

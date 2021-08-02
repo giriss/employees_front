@@ -50,6 +50,8 @@ function SignInInnerForm({
   handleBlur,
   handleChange,
   handleSubmit,
+  isValid,
+  dirty,
 }) {
   const errs = useSelector(selectErrors);
   const hasError = useMemo(() => errs && errs.length > 0, [errs]);
@@ -85,10 +87,8 @@ function SignInInnerForm({
         />
       )}
       <Form.Button
-        color="violet"
-        disabled={
-          Object.keys(errors).length !== 0 || Object.keys(touched).length === 0
-        }
+        color="instagram"
+        disabled={!isValid || !dirty}
       >
         Sign In
       </Form.Button>
