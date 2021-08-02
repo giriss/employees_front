@@ -25,7 +25,7 @@ function EmployeesManagement({ isCreation }) {
       <Divider />
       <PaddedContainer bottom size="15px">
         <EmployeeCreateForm
-          open={isCreation}
+          open={!!isCreation}
           onOpen={() => history.push('/employees/new')}
           onClose={() => history.push('/employees')}
         />

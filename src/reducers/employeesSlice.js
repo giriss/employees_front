@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import Axios from '../app/Axios';
 import { ENDPOINT } from '../app/constants';
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
 export const createEmployee = createAsyncThunk(
   'employees/create',
   async ({ employee, token }) => {
-    const response = await axios.post(
+    const response = await Axios.post(
       `${ENDPOINT}/employees`,
       { employee },
       {
@@ -25,7 +25,7 @@ export const createEmployee = createAsyncThunk(
 export const listEmployees = createAsyncThunk(
   'employees/list',
   async (token) => {
-    const response = await axios.get(
+    const response = await Axios.get(
       `${ENDPOINT}/employees`,
       {
         headers: {
@@ -40,7 +40,7 @@ export const listEmployees = createAsyncThunk(
 export const deleteEmployee = createAsyncThunk(
   'employees/delete',
   async ({ employee: { id }, token }) => {
-    await axios.delete(
+    await Axios.delete(
       `${ENDPOINT}/employees/${id}`,
       {
         headers: {

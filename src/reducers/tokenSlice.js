@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import Axios from '../app/Axios';
 import { ENDPOINT } from '../app/constants';
 
 const initialState = {
@@ -12,7 +12,7 @@ const makeUserRequest = async (
   { rejectWithValue },
 ) => {
   try {
-    const response = await axios.post(
+    const response = await Axios.post(
       `${ENDPOINT}/users${isCreate ? '' : '/login'}`,
       {
         user: { username, password },
