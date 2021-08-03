@@ -26,7 +26,7 @@ function App() {
     <>
       <LoadingBar color="#2185d0" ref={loadingRef} />
       <Router>
-        <Container text>
+        <Container>
           <Switch>
             <Route exact path="/" component={Homepage} />
             <Route>

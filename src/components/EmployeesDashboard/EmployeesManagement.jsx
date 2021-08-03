@@ -31,7 +31,7 @@ function EmployeesManagement({ isCreation }) {
         />
       </PaddedContainer>
       {hasEmployee && (
-        <Card.Group stackable itemsPerRow={2}>
+        <Card.Group stackable itemsPerRow={3}>
           {employees.map(
             employee => <EmployeeCard employee={employee} key={employee.id} />
           )}
