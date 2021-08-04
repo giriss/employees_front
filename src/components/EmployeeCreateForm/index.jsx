@@ -1,23 +1,30 @@
 import { Formik } from "formik";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Icon, Modal } from "semantic-ui-react";
-import { createEmployee } from "../../reducers/employeesSlice";
+import { createEmployee, updateEmployee } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 import EmployeeForm from "./EmployeeForm";
 
-function EmployeeCreateForm({ open, onOpen, onClose }) {
+function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const formRef = useRef();
 
+  const isUpdate = useMemo(() => !!employee, [employee]);
+
   const create = useCallback(
-    async (employee, { resetForm }) => {
-      const { type } = await dispatch(createEmployee({ employee, token }));
+    async (editedEmployee, { resetForm }) => {
+      const { type } = await dispatch(
+        isUpdate ?
+          updateEmployee({ employee: { ...editedEmployee, id: employee.id }, token }) :
+          createEmployee({ employee: editedEmployee, token })
+      );
       resetForm();
-      onClose && type === 'employees/create/fulfilled' && onClose();
+      const isFulfilled = ['employees/create/fulfilled', 'employees/update/fulfilled'].includes(type);
+      onClose && isFulfilled && onClose();
     },
-    [token, dispatch, onClose],
+    [token, dispatch, onClose, isUpdate, employee],
   );
 
   const submitForm = useCallback(() => {
@@ -29,7 +36,15 @@ function EmployeeCreateForm({ open, onOpen, onClose }) {
 
   return (
     <Formik
-      initialValues={{ first_name: '', last_name: '', email: '', permanent: false, dob: '', status: 0 }}
+      enableReinitialize
+      initialValues={{
+        first_name: employee?.first_name || '',
+        last_name: employee?.last_name || '',
+        email: employee?.email || '',
+        permanent: employee?.permanent || false,
+        dob: employee?.dob || '',
+        status: employee?.status || 0
+      }}
       onSubmit={create}
     >
       {props => (
@@ -45,7 +60,7 @@ function EmployeeCreateForm({ open, onOpen, onClose }) {
             </Button>
           }
         >
-          <Modal.Header>Create employee</Modal.Header>
+          <Modal.Header>{isUpdate ? 'Update' : 'Create'} employee</Modal.Header>
           <Modal.Content>
             <EmployeeForm
               {...props}
@@ -60,7 +75,7 @@ function EmployeeCreateForm({ open, onOpen, onClose }) {
               disabled={!props.isValid}
               onClick={submitForm}
             >
-              Create
+              {isUpdate ? 'Update' : 'Create'}
             </Button>
           </Modal.Actions>
         </Modal>

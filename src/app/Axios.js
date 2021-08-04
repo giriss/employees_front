@@ -1,7 +1,7 @@
 import axios from "axios";
 import { hideLoader, showLoader } from "../reducers/loadingSlice";
 
-const Axios = axios.create(axios.defaults);
+const Axios = axios.create();
 
 Axios.interceptors.request.use(requestConfig => {
   const { store } = require('./store');
@@ -18,7 +18,7 @@ Axios.interceptors.response.use(
   error => {
     const { store } = require('./store');
     store.dispatch(hideLoader());
-    return error;
+    throw error;
   }
 )
 

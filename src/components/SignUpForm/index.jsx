@@ -1,28 +1,27 @@
 import { Formik } from "formik";
-import { useEffect } from "react";
 import { useMemo } from "react";
 import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Form, Header, Message } from "semantic-ui-react";
 import { generateInputProps } from "../../app/tools";
-import { clearErros, createUserAsync, selectErrors } from "../../reducers/tokenSlice";
+import { createUserAsync } from "../../reducers/tokenSlice";
 import formValidation from "./formValidation";
 import Authentication from "../Authentication";
+import { useState } from "react";
 
 function SignUpForm() {
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState([]);
 
   const submitForm = useCallback(
-    ({ username, password }) => {
-      dispatch(clearErros());
-      dispatch(createUserAsync({ username, password }));
+    async ({ username, password }) => {
+      const { type, payload } = await dispatch(createUserAsync({ username, password }));
+      if (type === 'token/createUser/rejected') {
+        setErrors(payload);
+      }
     },
     [dispatch],
   );
-
-  useEffect(() => {
-    dispatch(clearErros());
-  }, [dispatch]);
 
   return (
     <Authentication loggedOut>
@@ -32,7 +31,7 @@ function SignUpForm() {
         onSubmit={submitForm}
         validationSchema={formValidation}
       >
-        {SignUpInnerForm}
+        {props => <SignUpInnerForm {...props} submitErrors={errors} />}
       </Formik>
     </Authentication>
   );
@@ -47,9 +46,9 @@ function SignUpInnerForm({
   handleSubmit,
   isValid,
   dirty,
+  submitErrors,
 }) {
-  const errs = useSelector(selectErrors);
-  const hasError = useMemo(() => errs && errs.length > 0, [errs]);
+  const hasError = useMemo(() => submitErrors && submitErrors.length > 0, [submitErrors]);
 
   const generateFieldProps = (name, label) => {
     return generateInputProps(
@@ -82,7 +81,7 @@ function SignUpInnerForm({
         <Message
           error
           header="Something went wrong!"
-          list={errs}
+          list={submitErrors}
         />
       )}
       <Form.Button

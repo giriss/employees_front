@@ -8,7 +8,12 @@ export default function EmployeesDashboard() {
       <Switch>
         <Route exact path="/employees" component={EmployeesManagement} />
         <Route exact path="/employees/new">
-          <EmployeesManagement isCreation />
+          <EmployeesManagement isCreateOrEdit />
+        </Route>
+        <Route exact path="/employees/:id">
+          {({ match: { params: { id } } }) => (
+            <EmployeesManagement isCreateOrEdit editEmployeeId={id} />
+          )}
         </Route>
       </Switch>
     </Authentication>

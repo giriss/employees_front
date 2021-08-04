@@ -22,6 +22,22 @@ export const createEmployee = createAsyncThunk(
   },
 );
 
+export const updateEmployee = createAsyncThunk(
+  'employees/update',
+  async ({ employee, token }) => {
+    const response = await Axios.put(
+      `${ENDPOINT}/employees/${employee.id}`,
+      { employee },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  },
+);
+
 export const listEmployees = createAsyncThunk(
   'employees/list',
   async (token) => {
@@ -74,6 +90,13 @@ export const employeesSlice = createSlice({
       deleteEmployee.fulfilled,
       (state, { payload: id }) => {
         state.items = state.items.filter(item => item.id !== id);
+      },
+    );
+    builder.addCase(
+      updateEmployee.fulfilled,
+      (state, { payload }) => {
+        const index = state.items.findIndex(e => e.id === payload.id);
+        state.items[index] = payload;
       },
     );
   },

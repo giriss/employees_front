@@ -5,7 +5,6 @@ import { ENDPOINT } from '../app/constants';
 const initialState = {
   value: '',
   expiry: 0,
-  errors: [],
 };
 
 const makeUserRequest = async (
@@ -39,42 +38,41 @@ export const createUserAsync = createAsyncThunk(
 );
 
 export const fetchUserAsync = createAsyncThunk(
-  'token/createUser',
+  'token/fetchUser',
   async ({ username, password }, { rejectWithValue }) => {
     return makeUserRequest({ username, password }, { rejectWithValue });
   }
 );
 
+const processResponse = (state, { payload: { accessToken, expiry } }) => {
+  state.value = accessToken;
+  state.expiry = expiry;
+};
+
 export const tokenSlice = createSlice({
   name: 'token',
   initialState,
   reducers: {
-    clearErros(state) {
-      state.errors = [];
+    invalidate(state) {
+      state.expiry = 0;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(
       createUserAsync.fulfilled,
-      (state, { payload: { accessToken, expiry } }) => {
-        state.value = accessToken;
-        state.expiry = expiry;
-      },
-    ).addCase(
-      createUserAsync.rejected,
-      (state, { payload }) => {
-        state.errors = payload;
-      }
+      processResponse,
+    );
+    builder.addCase(
+      fetchUserAsync.fulfilled,
+      processResponse,
     );
   },
 });
-
-export const { clearErros } = tokenSlice.actions;
 
 export const selectToken = ({ token: { value } }) => value === '' ? false : value;
 export const selectIsTokenValid = ({ token: { value, expiry } }) => (
   value !== '' && expiry >= Date.now() / 1_000
 );
-export const selectErrors = (state) => state.token.errors;
 
+export const { invalidate } = tokenSlice.actions;
 export default tokenSlice.reducer;
