@@ -8,17 +8,21 @@ const initialState = {
 
 export const createEmployee = createAsyncThunk(
   'employees/create',
-  async ({ employee, token }) => {
-    const response = await Axios.post(
-      `${ENDPOINT}/employees`,
-      { employee },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+  async ({ employee, token }, { rejectWithValue }) => {
+    try {
+      const response = await Axios.post(
+        `${ENDPOINT}/employees`,
+        { employee },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    );
-    return response.data.data;
+      );
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   },
 );
 

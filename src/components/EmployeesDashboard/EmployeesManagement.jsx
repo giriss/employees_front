@@ -16,7 +16,7 @@ function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
   const hasEmployee = useMemo(() => !!employees && !!employees.length, [employees]);
 
   const editEmployee = useMemo(() => (
-    employees.find(({ id }) => id === +editEmployeeId)
+    !!editEmployeeId ? employees.find(({ id }) => id === +editEmployeeId) : undefined
   ), [employees, editEmployeeId]);
 
   useEffect(() => {
