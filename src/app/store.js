@@ -3,7 +3,7 @@ import employeesReducer from '../reducers/employeesSlice';
 import tokenReducer from '../reducers/tokenSlice';
 import loadingReducer from '../reducers/loadingSlice';
 
-const token = JSON.parse(window.sessionStorage.getItem('token'));
+const token = JSON.parse(window.localStorage.getItem('token'));
 
 const store = configureStore({
   reducer: {
@@ -15,7 +15,7 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  window.sessionStorage.setItem('token', JSON.stringify(store.getState().token));
+  window.localStorage.setItem('token', JSON.stringify(store.getState().token));
 });
 
 export { store };

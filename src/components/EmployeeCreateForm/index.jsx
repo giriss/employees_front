@@ -6,6 +6,7 @@ import { Button, Icon, Modal } from "semantic-ui-react";
 import { createEmployee, updateEmployee } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 import EmployeeForm from "./EmployeeForm";
+import ImageDropzone from "./ImageDropzone";
 
 function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
       cancelable: true,
       bubbles: true,
     }));
-  }, [formRef]);
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -73,12 +74,13 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
           }
         >
           <Modal.Header>{isUpdate ? 'Update' : 'Create'} employee</Modal.Header>
-          <Modal.Content>
+          <Modal.Content scrolling>
             <EmployeeForm
               {...props}
               ref={formRef}
               onSubmit={props.handleSubmit}
             />
+            <ImageDropzone />
           </Modal.Content>
           <Modal.Actions>
             <Button onClick={onClose}>Cancel</Button>
