@@ -12,13 +12,16 @@ import { useState } from "react";
 function SignInForm() {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitForm = useCallback(
     async ({ username, password }) => {
+      setIsLoading(true);
       const { type, payload } = await dispatch(fetchUserAsync({ username, password }));
       if (type === 'token/fetchUser/rejected') {
         setErrors(payload);
       }
+      setIsLoading(false);
     },
     [dispatch],
   );
@@ -31,7 +34,7 @@ function SignInForm() {
         onSubmit={submitForm}
         validationSchema={formValidation}
       >
-        {props => <SignInInnerForm {...props} submitErrors={errors} />}
+        {props => <SignInInnerForm {...props} submitErrors={errors} formLoading={isLoading} />}
       </Formik>
     </Authentication>
   );
@@ -46,7 +49,8 @@ function SignInInnerForm({
   handleSubmit,
   isValid,
   dirty,
-  submitErrors
+  submitErrors,
+  formLoading,
 }) {
   const hasError = useMemo(() => submitErrors && submitErrors.length > 0, [submitErrors]);
 
@@ -82,7 +86,8 @@ function SignInInnerForm({
       )}
       <Form.Button
         primary
-        disabled={!isValid || !dirty}
+        disabled={!isValid || !dirty || formLoading}
+        loading={formLoading}
       >
         Sign In
       </Form.Button>
