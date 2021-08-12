@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Button, Card, Label, Modal } from "semantic-ui-react";
+import { Button, Card, Image, Label, Modal } from "semantic-ui-react";
+import { PICTURE_BASE_URL } from "../../app/constants";
 import { deleteEmployee } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 
@@ -18,10 +19,17 @@ function EmployeeCard({ employee }) {
         employee={employee}
         open={isDeleting}
         onCancel={_ => setIsDeleting(false)}
-        onSuccess={_ => setIsDeleting(false)}
       />
       <Card raised>
         <Card.Content>
+          {employee.picture_id && (
+            <Image
+              floated="right"
+              size="mini"
+              circular
+              src={`${PICTURE_BASE_URL}/${employee.picture_id}`}
+            />
+          )}
           <Card.Header>{employee.first_name} {employee.last_name}</Card.Header>
           <Card.Meta>{employee.email}</Card.Meta>
           <Card.Description>
@@ -46,14 +54,13 @@ function EmployeeCard({ employee }) {
   );
 }
 
-function EmployeeDeleteModal({ employee, open, onCancel, onSuccess }) {
+function EmployeeDeleteModal({ employee, open, onCancel }) {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
 
   const remove = useCallback(async () => {
     await dispatch(deleteEmployee({ employee, token }));
-    onSuccess();
-  }, [dispatch, employee, token, onSuccess]);
+  }, [dispatch, employee, token]);
 
   return (
     <Modal

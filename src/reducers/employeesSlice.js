@@ -42,6 +42,25 @@ export const updateEmployee = createAsyncThunk(
   },
 );
 
+export const addEmployeePicture = createAsyncThunk(
+  'employees/addPicture',
+  async ({ id, picture, token }) => {
+    const formData = new FormData();
+    formData.append('picture', picture, picture.name);
+
+    const response = await Axios.put(
+      `${ENDPOINT}/employees/${id}/picture`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  },
+);
+
 export const listEmployees = createAsyncThunk(
   'employees/list',
   async (token) => {
@@ -98,6 +117,13 @@ export const employeesSlice = createSlice({
     );
     builder.addCase(
       updateEmployee.fulfilled,
+      (state, { payload }) => {
+        const index = state.items.findIndex(e => e.id === payload.id);
+        state.items[index] = payload;
+      },
+    );
+    builder.addCase(
+      addEmployeePicture.fulfilled,
       (state, { payload }) => {
         const index = state.items.findIndex(e => e.id === payload.id);
         state.items[index] = payload;

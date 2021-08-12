@@ -3,17 +3,24 @@ import { forwardRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button, Header, Icon, Ref, Segment } from "semantic-ui-react";
 
-function ImageDropzone() {
+function ImageDropzone({ onAdd }) {
   const [isDragging, setIsDragging] = useState(false);
   const onDragOver = () => setIsDragging(true);
   const onDragLeave = () => setIsDragging(false);
+  const onDrop = acceptedFiles => {
+    if (acceptedFiles.length === 1) {
+      onAdd(acceptedFiles[0]);
+    }
+    onDragLeave();
+  }
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDragLeave,
     onDragOver,
-    onDrop: onDragLeave,
+    onDrop,
     maxFiles: 1,
     multiple: false,
+    accept: 'image/*'
   });
 
   return (

@@ -20,8 +20,8 @@ function SignInForm() {
       const { type, payload } = await dispatch(fetchUserAsync({ username, password }));
       if (type === 'token/fetchUser/rejected') {
         setErrors(payload);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
     [dispatch],
   );

@@ -1,9 +1,10 @@
 import { Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Icon, Modal } from "semantic-ui-react";
-import { createEmployee, updateEmployee } from "../../reducers/employeesSlice";
+import { Button, Icon, Image, Modal } from "semantic-ui-react";
+import { PICTURE_BASE_URL } from "../../app/constants";
+import { createEmployee, updateEmployee, addEmployeePicture } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 import EmployeeForm from "./EmployeeForm";
 import ImageDropzone from "./ImageDropzone";
@@ -14,8 +15,21 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
   const formRef = useRef();
   const formikRef = useRef();
   const isUpdate = useMemo(() => !!employee, [employee]);
+  const [picture, setPicture] = useState();
+  const imageUrl = useMemo(() => {
+    if (picture === false) {
+      return null;
+    }
+    if (!!picture) {
+      return URL.createObjectURL(picture);
+    }
+    if (employee?.picture_id) {
+      return `${PICTURE_BASE_URL}/${employee.picture_id}`;
+    }
+    return null;
+  }, [picture, employee?.picture_id]);
 
-  const create = useCallback(
+  const createOrUpdate = useCallback(
     async (editedEmployee, { resetForm }) => {
       const result = await dispatch(
         isUpdate ?
@@ -23,6 +37,10 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
           createEmployee({ employee: editedEmployee, token })
       );
       if (/^employees\/.+\/fulfilled$/.test(result.type)) {
+        const { payload: { id } } = result;
+        if (!!picture) {
+          await dispatch(addEmployeePicture({ id, picture, token }));
+        }
         resetForm();
         onClose();
       } else {
@@ -30,7 +48,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
         formikRef.current.setErrors(errors);
       }
     },
-    [token, dispatch, onClose, isUpdate, employee],
+    [token, dispatch, onClose, isUpdate, employee, picture],
   );
 
   const submitForm = useCallback(() => {
@@ -43,6 +61,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
   useEffect(() => {
     if (!open) {
       formikRef.current.resetForm();
+      setPicture(undefined);
     }
   }, [open]);
 
@@ -58,7 +77,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
         dob: employee?.dob || '',
         status: employee?.status || 0
       }}
-      onSubmit={create}
+      onSubmit={createOrUpdate}
     >
       {props => (
         <Modal
@@ -80,7 +99,20 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
               ref={formRef}
               onSubmit={props.handleSubmit}
             />
-            <ImageDropzone />
+            {!imageUrl && <ImageDropzone onAdd={image => setPicture(image)} />}
+            {!!imageUrl && (
+              <Image
+                size="small"
+                src={imageUrl}
+                label={{
+                  as: 'a',
+                  color: 'red',
+                  corner: 'right',
+                  icon: 'delete',
+                  onClick: () => setPicture(false)
+                }}
+              />
+            )}
           </Modal.Content>
           <Modal.Actions>
             <Button onClick={onClose}>Cancel</Button>

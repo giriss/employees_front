@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Container } from "semantic-ui-react";
 
-const PaddedContainer = styled(Container)`
+const PaddedContainer = styled(({ bottom, ...props }) => <Container {...props} />)`
   ${({ size, all, top }) => (all || top) && `padding-top: ${size || '10px'};`}
   ${({ size, all, right }) => (all || right) && `padding-right: ${size || '10px'};`}
   ${({ size, all, bottom }) => (all || bottom) && `padding-bottom: ${size || '10px'};`}
