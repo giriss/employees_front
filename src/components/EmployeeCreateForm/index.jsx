@@ -4,7 +4,7 @@ import { useRef, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Icon, Image, Modal } from "semantic-ui-react";
 import { PICTURE_BASE_URL } from "../../app/constants";
-import { createEmployee, updateEmployee, addEmployeePicture } from "../../reducers/employeesSlice";
+import { createEmployee, updateEmployee, addEmployeePicture, deleteEmployeePicture } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 import EmployeeForm from "./EmployeeForm";
 import ImageDropzone from "./ImageDropzone";
@@ -42,6 +42,8 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
         const { payload: { id } } = result;
         if (!!picture) {
           await dispatch(addEmployeePicture({ id, picture, token }));
+        } else if (employee?.picture_id && !imageUrl) {
+          await dispatch(deleteEmployeePicture({ id, token }));
         }
         resetForm();
         onClose();
@@ -51,7 +53,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
       }
       setSubmitting(false);
     },
-    [token, dispatch, onClose, isUpdate, employee, picture],
+    [token, dispatch, onClose, isUpdate, employee, picture, imageUrl],
   );
 
   const submitForm = useCallback(() => {

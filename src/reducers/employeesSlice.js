@@ -61,6 +61,21 @@ export const addEmployeePicture = createAsyncThunk(
   },
 );
 
+export const deleteEmployeePicture = createAsyncThunk(
+  'employees/deletePicture',
+  async ({ id, token }) => {
+    const response = await Axios.delete(
+      `${ENDPOINT}/employees/${id}/picture`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  },
+);
+
 export const listEmployees = createAsyncThunk(
   'employees/list',
   async (token) => {
@@ -124,6 +139,13 @@ export const employeesSlice = createSlice({
     );
     builder.addCase(
       addEmployeePicture.fulfilled,
+      (state, { payload }) => {
+        const index = state.items.findIndex(e => e.id === payload.id);
+        state.items[index] = payload;
+      },
+    );
+    builder.addCase(
+      deleteEmployeePicture.fulfilled,
       (state, { payload }) => {
         const index = state.items.findIndex(e => e.id === payload.id);
         state.items[index] = payload;
