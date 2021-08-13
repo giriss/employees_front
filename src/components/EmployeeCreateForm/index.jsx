@@ -16,6 +16,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
   const formikRef = useRef();
   const isUpdate = useMemo(() => !!employee, [employee]);
   const [picture, setPicture] = useState();
+  const [submitting, setSubmitting] = useState(false);
   const imageUrl = useMemo(() => {
     if (picture === false) {
       return null;
@@ -31,6 +32,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
 
   const createOrUpdate = useCallback(
     async (editedEmployee, { resetForm }) => {
+      setSubmitting(true);
       const result = await dispatch(
         isUpdate ?
           updateEmployee({ employee: { ...editedEmployee, id: employee.id }, token }) :
@@ -47,6 +49,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
         const { payload: { errors } } = result;
         formikRef.current.setErrors(errors);
       }
+      setSubmitting(false);
     },
     [token, dispatch, onClose, isUpdate, employee, picture],
   );
@@ -117,8 +120,9 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
           <Modal.Actions>
             <Button onClick={onClose}>Cancel</Button>
             <Button
+              loading={submitting}
               primary
-              disabled={!props.isValid}
+              disabled={!props.isValid || submitting}
               onClick={submitForm}
             >
               {isUpdate ? 'Update' : 'Create'}
