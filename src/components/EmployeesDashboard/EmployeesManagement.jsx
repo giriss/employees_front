@@ -1,12 +1,13 @@
-import { useMemo, useEffect, useCallback } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Divider, Header, Input } from "semantic-ui-react";
+import { Container, Divider, Header } from "semantic-ui-react";
 import { listEmployees, selectEmployees } from "../../reducers/employeesSlice";
 import { selectToken } from "../../reducers/tokenSlice";
 import EmployeeCreateForm from "../EmployeeCreateForm";
 import PaddedContainer from "../styled-components/PaddedContainer";
 import { useHistory } from "react-router-dom";
 import { EmployeesList } from "./EmployeesList";
+import EmployeeSearch from "./EmployeeSearch";
 
 function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
   const dispatch = useDispatch();
@@ -14,21 +15,19 @@ function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
   const token = useSelector(selectToken);
   const employees = useSelector(selectEmployees);
   const hasEmployee = useMemo(() => !!employees && !!employees.length, [employees]);
-  const query = useMemo(() => history.location.search.replace('?q=', '').toLowerCase(), [history.location.search]);
+  const [query, setQuery] = useState([]);
+  const updateQuery = useCallback(queries => setQuery(queries.map(q => q.toLowerCase())), []);
   const filteredEmployees = useMemo(() => {
-    if (query === '') {
+    if (query.length === 0) {
       return employees;
     }
     return employees.filter(({ first_name, last_name }) => (
-      first_name.toLowerCase().includes(query) || last_name.toLowerCase().includes(query)
+      query.reduce(
+        (acc, q) => acc && (first_name.toLowerCase().includes(q) || last_name.toLowerCase().includes(q)),
+        true
+      )
     ));
   }, [query, employees]);
-  const searchByName = useCallback((_, elem) => {
-    history.push({
-      pathname: '/employees',
-      search: elem.value === '' ? undefined : `?q=${encodeURIComponent(elem.value)}`,
-    });
-  }, [history]);
 
   const editEmployee = useMemo(() => (
     !!editEmployeeId ? employees.find(({ id }) => id === +editEmployeeId) : undefined
@@ -53,11 +52,7 @@ function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
       {hasEmployee && (
         <>
           <PaddedContainer bottom size="15px">
-            <Input
-              value={query}
-              placeholder="Search by name"
-              onChange={searchByName}
-            />
+            <EmployeeSearch onChange={updateQuery} />
           </PaddedContainer>
           <EmployeesList items={filteredEmployees} />
         </>
