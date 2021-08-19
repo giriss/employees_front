@@ -22,18 +22,18 @@ function EmployeeCard({ employee }) {
       />
       <Card raised>
         <Card.Content>
-          {employee.picture_id && (
+          {employee.pictureId && (
             <Image
               floated="right"
               size="mini"
               circular
-              src={`${PICTURE_BASE_URL}/${employee.picture_id}`}
+              src={`${PICTURE_BASE_URL}/${employee.pictureId}`}
             />
           )}
-          <Card.Header>{employee.first_name} {employee.last_name}</Card.Header>
+          <Card.Header>{employee.firstName} {employee.lastName}</Card.Header>
           <Card.Meta>{employee.email}</Card.Meta>
           <Card.Description>
-            {employee.first_name} {employee.last_name} ({employee.email}) was born on {employee.dob}.
+            {employee.firstName} {employee.lastName} ({employee.email}) was born on {employee.dob}.
             <br />
             <br />
             <Label color={employee.permanent ? 'green' : 'red'}>
@@ -67,7 +67,7 @@ function EmployeeDeleteModal({ employee, open, onCancel }) {
       basic
       open={open}
       header="Confirm delete?"
-      content={`Are you sure to delete employee ${employee.first_name} ${employee.last_name}?`}
+      content={`Are you sure to delete employee ${employee.firstName} ${employee.lastName}?`}
       actions={[
         <Button
           basic

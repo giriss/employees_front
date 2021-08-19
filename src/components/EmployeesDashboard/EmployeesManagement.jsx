@@ -21,9 +21,9 @@ function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
     if (query.length === 0) {
       return employees;
     }
-    return employees.filter(({ first_name, last_name }) => (
+    return employees.filter(({ firstName, lastName }) => (
       query.reduce(
-        (acc, q) => acc && (first_name.toLowerCase().includes(q) || last_name.toLowerCase().includes(q)),
+        (acc, q) => acc && (firstName.toLowerCase().includes(q) || lastName.toLowerCase().includes(q)),
         true
       )
     ));

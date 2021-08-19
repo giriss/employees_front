@@ -24,11 +24,11 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
     if (!!picture) {
       return URL.createObjectURL(picture);
     }
-    if (employee?.picture_id) {
-      return `${PICTURE_BASE_URL}/${employee.picture_id}`;
+    if (employee?.pictureId) {
+      return `${PICTURE_BASE_URL}/${employee.pictureId}`;
     }
     return null;
-  }, [picture, employee?.picture_id]);
+  }, [picture, employee?.pictureId]);
 
   const createOrUpdate = useCallback(
     async (editedEmployee, { resetForm }) => {
@@ -42,7 +42,7 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
         const { payload: { id } } = result;
         if (!!picture) {
           await dispatch(addEmployeePicture({ id, picture, token }));
-        } else if (employee?.picture_id && !imageUrl) {
+        } else if (employee?.pictureId && !imageUrl) {
           await dispatch(deleteEmployeePicture({ id, token }));
         }
         resetForm();
@@ -75,8 +75,8 @@ function EmployeeCreateForm({ open, employee, onOpen, onClose }) {
       innerRef={formikRef}
       enableReinitialize
       initialValues={{
-        first_name: employee?.first_name || '',
-        last_name: employee?.last_name || '',
+        firstName: employee?.firstName || '',
+        lastName: employee?.lastName || '',
         email: employee?.email || '',
         permanent: employee?.permanent || false,
         dob: employee?.dob || '',

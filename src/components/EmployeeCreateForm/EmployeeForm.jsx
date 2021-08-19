@@ -28,8 +28,8 @@ const EmployeeForm = forwardRef(function({
     <Ref innerRef={ref}>
       <Form onSubmit={onSubmit}>
         <Form.Group widths="equal">
-          <Form.Input {...generateFieldProps('first_name', 'First name')} />
-          <Form.Input {...generateFieldProps('last_name', 'Last name')} />
+          <Form.Input {...generateFieldProps('firstName', 'First name')} />
+          <Form.Input {...generateFieldProps('lastName', 'Last name')} />
         </Form.Group>
         <Form.Group widths="equal">
           <Form.Input {...generateFieldProps('email', 'Email')} />

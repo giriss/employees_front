@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Axios from '../app/Axios';
 import { ENDPOINT } from '../app/constants';
+import { camelToSnakeCaseObj, snakeToCamelCaseObj } from '../app/tools';
 
 const initialState = {
   items: [],
@@ -12,14 +13,14 @@ export const createEmployee = createAsyncThunk(
     try {
       const response = await Axios.post(
         `${ENDPOINT}/employees`,
-        { employee },
+        { employee: camelToSnakeCaseObj(employee) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         },
       );
-      return response.data.data;
+      return snakeToCamelCaseObj(response.data.data);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -31,14 +32,14 @@ export const updateEmployee = createAsyncThunk(
   async ({ employee, token }) => {
     const response = await Axios.put(
       `${ENDPOINT}/employees/${employee.id}`,
-      { employee },
+      { employee: camelToSnakeCaseObj(employee) },
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     );
-    return response.data.data;
+    return snakeToCamelCaseObj(response.data.data);
   },
 );
 
@@ -57,7 +58,7 @@ export const addEmployeePicture = createAsyncThunk(
         },
       },
     );
-    return response.data.data;
+    return snakeToCamelCaseObj(response.data.data);
   },
 );
 
@@ -72,7 +73,7 @@ export const deleteEmployeePicture = createAsyncThunk(
         },
       },
     );
-    return response.data.data;
+    return snakeToCamelCaseObj(response.data.data);
   },
 );
 
@@ -87,7 +88,7 @@ export const listEmployees = createAsyncThunk(
         },
       },
     );
-    return response.data.data;
+    return response.data.data.map(employee => snakeToCamelCaseObj(employee));
   },
 );
 
@@ -109,8 +110,6 @@ export const deleteEmployee = createAsyncThunk(
 export const employeesSlice = createSlice({
   name: 'employees',
   initialState,
-  reducers: {
-  },
   extraReducers: (builder) => {
     builder.addCase(
       createEmployee.fulfilled,
