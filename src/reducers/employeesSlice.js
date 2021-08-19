@@ -120,7 +120,7 @@ export const employeesSlice = createSlice({
     builder.addCase(
       listEmployees.fulfilled,
       (state, { payload }) => {
-        state.items = payload.reverse();
+        state.items = payload;
       },
     );
     builder.addCase(
