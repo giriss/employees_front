@@ -1,3 +1,3 @@
-export const ENDPOINT = 'https://serene-scrubland-83834.herokuapp.com/v1';
-// export const ENDPOINT = 'http://localhost:4000/v1';
-export const PICTURE_BASE_URL = 'https://res.cloudinary.com/hk6drdxzs/image/upload/c_thumb,g_face,h_200,w_200'
+// export const ENDPOINT = 'https://mighty-refuge-91305.herokuapp.com';
+export const ENDPOINT = 'https://shielded-escarpment-93823.herokuapp.com/v1';
+export const PICTURE_BASE_URL = 'https://res.cloudinary.com/hqadjhtra/image/upload/c_thumb,g_face,h_200,w_200'
