@@ -22,7 +22,7 @@ export const createEmployee = createAsyncThunk(
       );
       return snakeToCamelCaseObj(response.data.data);
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue({ errors: snakeToCamelCaseObj(error.response.data.errors) });
     }
   },
 );
