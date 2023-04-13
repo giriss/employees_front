@@ -19,7 +19,7 @@ const makeUserRequest = async (
       },
     );
     return {
-      accessToken: response.data.data.access_token,
+      bearerToken: response.data.data.bearer_token,
       expiry: response.data.data.expiry,
     };
   } catch (error) {
@@ -44,8 +44,8 @@ export const fetchUserAsync = createAsyncThunk(
   }
 );
 
-const processResponse = (state, { payload: { accessToken, expiry } }) => {
-  state.value = accessToken;
+const processResponse = (state, { payload: { bearerToken, expiry } }) => {
+  state.value = bearerToken;
   state.expiry = expiry;
 };
 
