@@ -45,7 +45,7 @@ function EmployeesManagement({ isCreateOrEdit, editEmployeeId }) {
           <Header as="h1">Employees Management</Header>
         </Grid.Column>
         <Grid.Column width={8} floated="right" textAlign="right">
-          <Button icon basic labelPosition='left' onClick={() => dispatch(invalidate())}>
+          <Button icon labelPosition='left' onClick={() => dispatch(invalidate())}>
             <Icon name="sign out" />
             Log out
           </Button>
